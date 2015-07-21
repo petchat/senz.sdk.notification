@@ -45,6 +45,7 @@ AV.Cloud.define("notify_new_config_batch", function (request, response) {
 
 AV.Cloud.define("notify_all_user_same_config", function (request, response) {
     var configs  = request.params.configs;
+    console.log("The config content is: \n" + JSON.stringify(configs));
 
     dao.getAllUsers().then(function (all_users){
         M.notifyNewConfigBatch(all_users, configs, fb.configuration_ref).then(
