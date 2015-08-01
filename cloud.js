@@ -69,7 +69,7 @@ AV.Cloud.define("notify_new_output", function (request, response) {
     var user_id = request.params.userId,
         output  = request.params.output;
 
-    M.notifyNewConfig(user_id, output, fb.notification_ref).then(
+    M.notifyNewEvents(user_id, output, fb.notification_ref).then(
         function (msg){
             response.success({
                 code: 0,
