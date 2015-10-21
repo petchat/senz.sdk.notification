@@ -68,8 +68,27 @@ AV.Cloud.define("notify_all_user_same_config", function (request, response) {
 AV.Cloud.define("notify_new_output", function (request, response) {
     var user_id = request.params.userId,
         output  = request.params.output;
-
     M.notifyNewEvents(user_id, output, fb.notification_ref).then(
+        function (msg){
+            response.success({
+                code: 0,
+                message: msg
+            })
+        },
+        function (error){
+            response.error({
+                code: 1,
+                message: error
+            });
+        }
+    );
+});
+AV.Cloud.define("notify_new_details", function(request, response){
+    var user_id = request.params.userId,
+        type = request.params.type,
+        val  = request.params.val;
+
+    M.notifyNewDetails(user_id, type, val, fb.notification_ref).then(
         function (msg){
             response.success({
                 code: 0,
