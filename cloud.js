@@ -4,9 +4,9 @@ var dao = require("./lib/dao.js");
 var fb  = require("./lib/fb.js");
 
 AV.Cloud.define("notify_new_config", function (request, response) {
+    console.log(request.params);
     var user_id = request.params.userId,
         config  = request.params.config;
-
     M.notifyNewConfig(user_id, config, fb.configuration_ref).then(
         function (msg){
             response.success({
@@ -86,9 +86,10 @@ AV.Cloud.define("notify_new_output", function (request, response) {
 AV.Cloud.define("notify_new_details", function(request, response){
     var user_id = request.params.userId,
         type = request.params.type,
-        val  = request.params.val;
+        val  = request.params.val,
+        source = request.params.source;
 
-    M.notifyNewDetails(user_id, type, val, fb.notification_ref).then(
+    M.notifyNewDetails(user_id, type, val, source, fb.notification_ref).then(
         function (msg){
             response.success({
                 code: 0,
