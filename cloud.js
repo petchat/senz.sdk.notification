@@ -86,9 +86,15 @@ AV.Cloud.define("notify_new_details", function(request, response){
     var user_id = request.params.userId,
         type = request.params.type,
         val  = request.params.val,
-        source = request.params.source;
-
-    M.notifyNewDetails(user_id, type, val, source, fb.notification_ref).then(
+        source = request.params.source,
+        timestamp = request.params.timestamp || (new Date()).valueOf();
+    console.log(
+        "user_id: " + user_id + " "
+        + "type: " + type + " "
+        + "val: " + val + " "
+        + "timestamp " + timestamp
+    );
+    M.notifyNewDetails(user_id, type, val, source, timestamp, fb.notification_ref).then(
         function (msg){
             response.success({
                 code: 0,
