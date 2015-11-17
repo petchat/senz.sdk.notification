@@ -22,6 +22,7 @@
     "node-logentries": "latest",
     "request": "latest",
     "underscore": "latest",
+    "timer-promise": "latest",
     "wilddog": "^0.4.5"
   }
 }
