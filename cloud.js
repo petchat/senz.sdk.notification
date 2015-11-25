@@ -83,6 +83,8 @@ AV.Cloud.define("notify_new_output", function (request, response) {
         }
     );
 });
+
+var wilddog_push_flag = {};
 AV.Cloud.define("notify_new_details", function(request, response){
     var user_id = request.params.userId,
         type = request.params.type,
@@ -90,54 +92,94 @@ AV.Cloud.define("notify_new_details", function(request, response){
         source = request.params.source,
         expire = request.params.expire || 600,
         timestamp = request.params.timestamp || (new Date()).valueOf();
-    console.log(
-        "user_id: " + user_id + " "
+
+    console.log("[notification]"
+        + "user_id: " + user_id + " "
+        + "source " + source + " "
         + "type: " + type + " "
         + "val: " + val + " "
         + "timestamp " + timestamp + " "
         + "expire " + expire
     );
-    M.notifyNewDetails(user_id, type, val, source, timestamp, fb.notification_ref).then(
-        function (msg){
-            response.success({
-                code: 0,
-                message: msg
-            })
-        },
-        function (error){
-            console.log("error: " + error);
-            response.error({
-                code: 1,
-                message: error
-            });
-        }
-    );
 
-    if (type == 'home_office_status'){
-        timer.start(user_id, expire*1000).then(
-            function(){
-                console.log("Timeout");
-                return M.notifyNewDetails(user_id, type, "unknown_status", source, timestamp, fb.notification_ref);
-            },
-            function(err){
-                return AV.Promise.error(err);
-            }
-        ).then(
-            function (msg){
+    if((source == 'panel') || (!wilddog_push_flag[user_id]) || (wilddog_push_flag[user_id] && wilddog_push_flag[user_id][type])) {
+        console.log("push to wilddog!");
+
+        if (!wilddog_push_flag[user_id]) {
+            wilddog_push_flag[user_id] = {};
+        }
+
+        wilddog_push_flag[user_id][type] = true;
+
+        if(source != 'panel') {
+            wilddog_push_flag[user_id][type] = undefined;
+        }
+
+        M.notifyNewDetails(user_id, type, val, source, timestamp, fb.notification_ref).then(
+            function (msg) {
                 response.success({
                     code: 0,
                     message: msg
                 })
             },
-            function (error){
+            function (error) {
                 console.log("error: " + error);
                 response.error({
                     code: 1,
                     message: error
                 });
-            }
-        );
+            });
+    }else{
+        return response.success();
     }
+
+    //if (type == 'home_office_status'){
+    //    timer.start(user_id, expire*1000).then(
+    //        function(){
+    //            console.log("Timeout");
+    //            return M.notifyNewDetails(user_id, type, "unknown_status", source, timestamp, fb.notification_ref);
+    //        },
+    //        function(err){
+    //            return AV.Promise.error(err);
+    //        }
+    //    ).then(
+    //        function (msg){
+    //            response.success({
+    //                code: 0,
+    //                message: msg
+    //            })
+    //        },
+    //        function (error){
+    //            console.log("error: " + error);
+    //            response.error({
+    //                code: 1,
+    //                message: error
+    //            });
+    //        }
+    //    );
+    //}
+});
+
+AV.Cloud.define("notify_strategy_timer", function(request, response){
+    console.log(wilddog_push_flag);
+    Object.keys(wilddog_push_flag).forEach(function(uid){
+        if(!wilddog_push_flag[uid]['event']){
+            setTimeout(function(){
+                wilddog_push_flag[uid]['event'] = true;
+            }, 4*60*1000);
+        }
+        if(!wilddog_push_flag[uid]['motion']){
+            setTimeout(function(){
+                wilddog_push_flag[uid]['motion'] = true;
+            }, 4*60*1000);
+        }
+        if(!wilddog_push_flag[uid]['home_office_status']){
+            setTimeout(function(){
+                wilddog_push_flag[uid]['home_office_status'] = true;
+            }, 1000);
+        }
+    });
+    return response.success();
 });
 
 module.exports = AV.Cloud;
