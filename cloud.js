@@ -103,12 +103,15 @@ AV.Cloud.define("notify_new_details", function(request, response){
     );
 
     if((source == 'panel') || (!wilddog_push_flag[user_id]) || (wilddog_push_flag[user_id] && wilddog_push_flag[user_id][type])) {
-        console.log("push to wilddog!");
+        console.log("push to wilddog!\n");
 
         if (!wilddog_push_flag[user_id]) {
             wilddog_push_flag[user_id] = {};
         }
         wilddog_push_flag[user_id][type] = false;
+        setTimeout(function(){
+            wilddog_push_flag[user_id][type] = true;
+        }, 5*60*1000);
 
         M.notifyNewDetails(user_id, type, val, source, timestamp, fb.notification_ref).then(
             function (msg) {
@@ -155,22 +158,5 @@ AV.Cloud.define("notify_new_details", function(request, response){
     //}
 });
 
-var timer_count = 0;
-AV.Cloud.define("notify_strategy_timer", function(request, response){
-    Object.keys(wilddog_push_flag).forEach(function(uid){
-        if(!wilddog_push_flag[uid]['event'] && (timer_count == 4)) {
-            wilddog_push_flag[uid]['event'] = true;
-        }
-        if(!wilddog_push_flag[uid]['motion'] && (timer_count == 4)){
-            wilddog_push_flag[uid]['motion'] = true;
-        }
-        if(!wilddog_push_flag[uid]['home_office_status'] && (timer_count == 0)){
-            wilddog_push_flag[uid]['home_office_status'] = true;
-        }
-    });
-    timer_count++;
-    timer_count %= 5;
-    return response.success();
-});
 
 module.exports = AV.Cloud;
