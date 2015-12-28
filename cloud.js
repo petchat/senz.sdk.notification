@@ -2,7 +2,6 @@ var AV  = require("leanengine");
 var M   = require("./lib/method.js");
 var dao = require("./lib/dao.js");
 var fb  = require("./lib/fb.js");
-var timer = require('timer-promise');
 
 AV.Cloud.define("notify_new_config", function (request, response) {
     var user_id = request.params.userId,
@@ -102,7 +101,8 @@ AV.Cloud.define("notify_new_details", function(request, response){
         + "expire " + expire
     );
 
-    if((source == 'panel') || (!wilddog_push_flag[user_id]) || (wilddog_push_flag[user_id] && wilddog_push_flag[user_id][type])) {
+    if((source == 'panel') || (!wilddog_push_flag[user_id]) || (wilddog_push_flag[user_id] && wilddog_push_flag[user_id][type] == true) ||
+        (wilddog_push_flag[user_id] && wilddog_push_flag[user_id][type] == undefined)) {
         console.log("push to wilddog!\n");
 
         if (!wilddog_push_flag[user_id]) {
