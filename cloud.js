@@ -121,7 +121,7 @@ AV.Cloud.define("notify_new_details", function(request, response){
                 })
             },
             function (error) {
-                console.log("error: " + error);
+                console.log("error: " + JSON.stringify(error));
                 response.error({
                     code: 1,
                     message: error

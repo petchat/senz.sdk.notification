@@ -4,3 +4,4 @@
 .avoscloud
 *.log
 node_modules/
+.avoscloud/
