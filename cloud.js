@@ -101,17 +101,17 @@ AV.Cloud.define("notify_new_details", function(request, response){
         + "expire " + expire
     );
 
-    if((source == 'panel') || (!wilddog_push_flag[user_id]) || (wilddog_push_flag[user_id] && wilddog_push_flag[user_id][type] == true) ||
-        (wilddog_push_flag[user_id] && wilddog_push_flag[user_id][type] == undefined)) {
-        console.log("push to wilddog!\n");
-
-        if (!wilddog_push_flag[user_id]) {
-            wilddog_push_flag[user_id] = {};
-        }
-        wilddog_push_flag[user_id][type] = false;
-        setTimeout(function(){
-            wilddog_push_flag[user_id][type] = true;
-        }, 3*60*1000);
+    //if((source == 'panel') || (!wilddog_push_flag[user_id]) || (wilddog_push_flag[user_id] && wilddog_push_flag[user_id][type] == true) ||
+    //    (wilddog_push_flag[user_id] && wilddog_push_flag[user_id][type] == undefined)) {
+    //    console.log("push to wilddog!\n");
+    //
+    //    if (!wilddog_push_flag[user_id]) {
+    //        wilddog_push_flag[user_id] = {};
+    //    }
+    //    wilddog_push_flag[user_id][type] = false;
+    //    setTimeout(function(){
+    //        wilddog_push_flag[user_id][type] = true;
+    //    }, 3*60*1000);
 
         M.notifyNewDetails(user_id, type, val, source, timestamp, fb.notification_ref).then(
             function (msg) {
@@ -127,9 +127,9 @@ AV.Cloud.define("notify_new_details", function(request, response){
                     message: error
                 });
             });
-    }else{
-        return response.success();
-    }
+    //}else{
+    //    return response.success();
+    //}
 
     //if (type == 'home_office_status'){
     //    timer.start(user_id, expire*1000).then(
