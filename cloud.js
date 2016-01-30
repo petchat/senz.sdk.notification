@@ -193,16 +193,16 @@ AV.Cloud.define('pushAPNMessage', function(req, rep){
 });
 
 AV.Cloud.define('pushAndroidMessage', function(req, rep){
-    var installationId = userId_insatalltionId[req.params.userId];
+    var userId = req.params.userId;
     var msg = {
         type: req.params.type,
         value: req.params.value || req.params.val,
         timestamp: req.params.timestamp
     };
-    console.log(installationId);
+    console.log(userId);
     console.log(msg);
-    logger.debug("pushAndroidMessage", installationId + ": " +JSON.stringify(msg));
-    notify.pushAIMessage(installationId, msg);
+    logger.debug("pushAndroidMessage", userId + ": " +JSON.stringify(msg));
+    notify.pushAIMessage(userId, msg);
     rep.success("pushAndroidMessage END!");
 });
 
