@@ -23,6 +23,8 @@
     "request": "latest",
     "underscore": "latest",
     "timer-promise": "latest",
-    "wilddog": "^0.4.5"
+    "wilddog": "^0.4.5",
+    "tracer": "",
+    "apn": ""
   }
 }
