@@ -192,6 +192,11 @@ AV.Cloud.define('pushAPNMessage', function(req, rep){
     rep.success("pushAPNMessage END!");
 });
 
+AV.Cloud.define('getLastNotify', function(req, rep){
+    var installationId = req.params.installationId;
+    return rep.success(notify.getLastNotify(installationId));
+});
+
 AV.Cloud.define('pushAndroidMessage', function(req, rep){
     var userId = req.params.userId;
     var msg = {
